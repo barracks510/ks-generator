@@ -1,0 +1,6 @@
+#Compile Python Binaries
+*.pyo
+*.pyc
+
+#Generated Configuration Files
+*.cfg
