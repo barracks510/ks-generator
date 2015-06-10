@@ -5,7 +5,8 @@
 # Copyright (c) 2015 Dennis Chen. All rights reserved.
 
 from crypt import crypt
-import random
+from random import random
+from subprocess import check_output
 
 hosts = {
 "sorin1.cnsm.csulb.edu": "134.139.127.25",
@@ -82,23 +83,35 @@ ks.write("# System timezone\ntimezone America/Los_Angeles --isUtc --ntpservers=0
 
 # User Accounts
 root_password = raw_input("Root password: ")
-ks.write("#User Accounts\nrootpw --iscrypted " + crypt(root_password, "$6$"+str(random.random())))
+ks.write("#User Accounts\nrootpw --iscrypted " + crypt(root_password, "$6$"+str(random())) + "\n")
 
 user = raw_input("Username for non-root user: ")
 user_fullname = raw_input("Full name for non-root user: ")
 user_password = raw_input("User Password: ")
 
 
-user_flags = "user --name=" + user + " --password" + crypt(user_password, "$6$"+str(random.random())) +" --iscrypted --gecos=\"" + user_fullname + "\""
+user_flags = "user --name=" + user + " --password" + crypt(user_password, "$6$"+str(random())) +" --iscrypted --gecos=\"" + user_fullname + "\""
 
 if raw_input("Give Sudoer? [Y/n]") == "n":
 	ks.write(user_flags + "\n")
 else:
 	user_flags += " --groups=wheel\n"
-	ks.write(user_flags)
+	ks.write(user_flags + "\n")
 
-# # System bootloader configuration
-# bootloader --location=mbr --boot-drive=sda
+# Setup GRUB Bootloader
+grub_flags = "bootloader --location=mbr --boot-drive=sda --timeout=3"
+
+if raw_input("Set GRUB Password? [Y/n]: ") == "n":
+	ks.write(grub_flags + "\n")
+else: 
+	grub_password = raw_input("GRUB Password: ")
+	grub_crypt = check_output("echo -e \"" + grub_password + "\n" + grub_password + "\" | grub2-mkpasswd-pbkdf2", shell=True).replace("Enter password: \nReenter password: \nPBKDF2 hash of your password is ", "").replace("\n","")
+	if len(grub_crypt) != 282:
+		print "GRUB password could not be encrypted. Password will not be installed. "
+	else: 
+		grub_flags += " --iscrypted --password=" + grub_crypt
+		ks.write(grub_flags + "\n")
+
 # # Partition clearing information
 # clearpart --all --initlabel --drives=sda
 # # Disk partitioning information
