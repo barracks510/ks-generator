@@ -66,8 +66,6 @@ ks.write("# Do NOT run the Setup Agent on first boot\nfirstboot --disable\n# Key
 
 # Networking setup
 print "Configuring Networking..."
-if raw_input("IPv6 [Y/n]: ") == "n":
-	pass
 if raw_input("DHCP? [Y/n]: ") == "n":
 	print "Confirm the following are correct before using CFG."
 	print "Hostname: %s\nIP: %s" % (hostname, hosts[hostname])
@@ -87,9 +85,16 @@ if raw_input("DHCP? [Y/n]: ") == "n":
 	ks.write(NM)
 	ks.write(" --hostname=")
 	ks.write(hostname)
-	ks.write("\n")
+	if raw_input("IPv6 [Y/n]: ") == "n":
+		ks.write(" --noipv6\n")
+	else:
+		ks.write("\n")
 else:
 	ks.write("network --activate --bootproto=dhcp")
+	if raw_input("IPv6 [Y/n]: ") == "n":
+		ks.write(" --noipv6\n")
+	else:
+		ks.write("\n")
 
 # Set system timezone and chrony
 ks.write("# System services (chrony)\nservices --enabled=\"chronyd\"\n")
