@@ -127,11 +127,11 @@ else:
 		grub_flags += " --iscrypted --password=" + grub_crypt
 		ks.write(grub_flags + "\n")
 
-# # Partition clearing information
-# clearpart --all --initlabel --drives=sda
-# # Disk partitioning information
-# 
-# 
+# READ supplied DISK layout and WRITE changes
+disk = open(raw_input("DISK layout CONFIGURATION location: "))
+disk_layout = disk.read()
+disk.close()
+ks.write(disk_layout + "\n")
 
 # Install CORE, BASE and NTP Packages
 ks.write("%packages\n")
