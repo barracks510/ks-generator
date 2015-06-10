@@ -60,7 +60,7 @@ if raw_input("NET INSTALL? [Y/n]: ") == "n":
 	"# Use hard drive installation media\nharddrive --dir=None --partition=/dev/mapper/live-base\n")
 else:
 	ks.write(
-	"# Use CentOS 7 Mirrors\nurl --mirrorlist=http://mirror.centos.org/centos/7/os/x86_64/\n")
+	"# Use CentOS 7 Mirrors\nurl --url=http://mirror.centos.org/centos/7/os/x86_64/\n")
 
 ks.write("# Do NOT run the Setup Agent on first boot\nfirstboot --disable\n# Keyboard layouts\nkeyboard --vckeymap=us --xlayouts='us'\n# System language\nlang en_US.UTF-8\n")
 
@@ -115,6 +115,7 @@ else:
 # Setup GRUB Bootloader
 grub_flags = "bootloader --location=mbr --boot-drive=sda --timeout=3"
 
+print "RedHat recommends setting up a boot loader password on every system.\nAn unprotected boot loader can allow a potential attacker to modify the \nsystem's boot options and gain unauthorized root access to a system. "
 if raw_input("Set GRUB Password? [Y/n]: ") == "n":
 	ks.write(grub_flags + "\n")
 else: 
@@ -132,6 +133,14 @@ else:
 # 
 # 
 
+# Install CORE, BASE and NTP Packages
+ks.write("%packages\n")
+ks.write("@core\n")
+ks.write("@base\n")
+ks.write("chrony\n")
+ks.write("epel-release\n")
+ks.write("%end\n\n")
+
 # Write hosts to /etc/hosts
 ks.write("%post\n")
 ks.write("#!/bin/bash\n")
@@ -141,8 +150,10 @@ ks.write("%end\n\n")
 
 # Disable RedHat KDump
 ks.write("%addon com_redhat_kdump --disable --reserve-mb=auto\n")
-ks.write("%end\n")
+ks.write("%end\n\n")
 
+# Reboot after finished installation
+ks.write("shutdown\n")
 
 ks.close()
 
