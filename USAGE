@@ -1,0 +1,11 @@
+USAGE
+-----
+
+Execute `./ks-generator.py` in the current directory.
+
+The output `.cfg` can be found in this directory in the form of HOSTNAME.CFG
+
+Detailed instructions on using the supplied CFG file can be found in the file
+named DEPLOYMENT. Documentation can also be aquired throught the main RED HAT
+documentation channels for EL7. 
+

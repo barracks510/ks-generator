@@ -1,0 +1,11 @@
+KS-GENERATOR
+===========
+
+Copyright (C) 2015 Dennis Chen
+
+KS-GENERATOR is an application that builds kickstarter configurations for 
+CentOS 7. 
+
+KS-GENERATOR is licenced under the GNU GPLv3+. A copy of this license can
+be found in COPYING.
+
