@@ -1,0 +1,11 @@
+CHANGE LOG
+==========
+
+All notable changes to this project will be documented in this file.
+This project adheres to [Semantic Versioning](http://semver.org/).
+
+0.1.1 - 2014-06-10
+Added
+- DHCP and STATIC IPv6 configuration options.
+- Enhanced package selection to support WS class environments.
+
