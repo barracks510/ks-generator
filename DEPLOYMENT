@@ -1,0 +1,16 @@
+SETTING UP KICKSTART DEPLOYMENT
+===============================
+
+SIMPLEST METHOD
+---------------
+
+Make the compiled KS.CFG avaliable through the local IP range by serving
+it through a HTTP web server. 
+
+At boot, TAB-in to modify boot parameters and append the following lines 
+to setup kickstart:
+	`ip=dhcp inst.ks=http://<YOUR SERVER IP>/<URI TO ACCESS CFG>`
+NOTE: At the CFG must be accessable through a given SERVER IP address. DNS
+will NOT be configured at the boot time.
+
+
