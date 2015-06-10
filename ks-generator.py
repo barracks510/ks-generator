@@ -138,6 +138,21 @@ ks.write("%packages\n")
 ks.write("@core\n")
 ks.write("@base\n")
 ks.write("chrony\n")
+
+# GUI?
+if (raw_input("Install WORKSTATION? [Y/n]")=="n"):
+	pass
+else:
+	ks.write("@gnome-desktop-environment\n")
+	ks.write("@gnome-apps\n")
+	ks.write("@internet-applications\n")
+	ks.write("@office-suite\n")
+	ks.write("@graphical-admin-tools\n")
+	ks.write("@technical-writing\n")
+ks.write("@development")
+ks.write("@hardware-monitoring")
+ks.write("@perl-runtime")
+ks.write("java-1.8.0-openjdk-devel")
 ks.write("epel-release\n")
 ks.write("%end\n\n")
 
