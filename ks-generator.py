@@ -2,7 +2,21 @@
 # 
 # This program creates a ks.cfg file based of the configuration options given.
 # 
-# Copyright (c) 2015 Dennis Chen. All rights reserved.
+# Copyright (C) 2015 Dennis Chen <barracks510@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+# 
 
 from crypt import crypt
 from random import random
@@ -31,7 +45,7 @@ NM = "255.255.255.128"
 GW = "134.139.127.1"
 DEV = "enp5s1"
 
-print "Copyright (c) 2015 Dennis Chen. All rights reserved."
+print "KS-GENERATOR Copyright (C) 2015 Dennis Chen <barracks510@gmail.com>\n\nThis program comes with ABSOLUTELY NO WARRANTY. This is free software, \nand you are welcome to redistribute it under certain conditions. \n\n"
 
 # Open a File HOSTNAME.CFG in WRITE mode
 hostname = str(raw_input("Machine Host Name: "))
