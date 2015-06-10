@@ -1,0 +1,64 @@
+DISK LAYOUT
+===========
+
+Advice on Partitions
+--------------------
+
+Optimal partition setup depends on the usage for the Linux system in question. These tips may help
+you decide how to configure your disk space.
+
+Consider encrypting any partitions that might contain sensitive data. Encryption prevents
+unauthorized people from accessing the data on the partitions, even if they have access to the
+physical storage device. In most cases, you should at least encrypt the /home partition.
+
+Each kernel installed on your system requires approximately 20 MB on the /boot partition. The
+default partition size of 500 MB for /boot should suffice for most common uses; increase the size
+of this partition if you plan to keep many kernels installed at the same time.
+
+The /var directory holds content for a number of applications, including the Apache web server.
+It also is used to store downloaded update packages on a temporary basis. Ensure that the
+partition containing the /var directory has enough space to download pending updates and
+hold your other content.
+
+If you create a separate partition for /var, ensure that it is at least 3GB in size to
+accomodate downloaded package updates.
+
+The /usr directory holds the majority of software content on a Red Hat Enterprise Linux system.
+For an installation of the default set of software, allocate at least 5 GB of space. If the system will
+be used as a software development workstation, allocate at least 10GB.
+
+SWAP
+----
+
+| Amount of RAM   |    Recommended swap     | Recommended swap if hibernating |
+|-----------------|-------------------------|---------------------------------|
+| less than 2 GB  | 2.0 x the amount of RAM | 3.0 x the amount of RAM         |
+| 2 GB - 8 GB     | 1.0 x the amount of RAM | 2.0 x the amount of RAM         |
+| 8 GB - 64 GB    | 0.5 x the amount of RAM | 1.5 x the amount of RAM         |
+| more than 64 GB | workload dependent      | hibernation not recommended     |
+
+At the border between each range listed above (for example, a system with 2 GB, 8 GB, or
+64 GB of system RAM), discretion can be exercised with regard to chosen swap space and
+hibernation support. If your system resources allow for it, increasing the swap space may
+lead to better performance.
+
+Special Considerations
+----------------------
+
+Consider leaving a portion of the space in an LVM volume group unallocated. This unallocated
+space gives you flexibility if your space requirements change but you do not wish to remove data
+from other partitions to reallocate storage. You can also select the Thin provisioning device
+type for the partition to have the unused space handled automatically by the volume.
+
+If you separate subdirectories into partitions, you can retain content in those subdirectories if you
+decide to install a new version of Red Hat Enterprise Linux over your current system. For instance,
+if you intend to run a MySQL database in /var/lib/mysql/, make a separate partition for that
+directory in case you need to reinstall later.
+
+On a BIOS system with its boot loader using GPT (GUID partition table), you need to create the
+biosboot partition of 1 MB in size. 
+
+UEFI systems need to contain a small partition with a mount point of /bo o t/efi containing an
+EFI System Partition file system. Its recommended size is 200 MB, which is also the default value
+for automatic partitioning.
+

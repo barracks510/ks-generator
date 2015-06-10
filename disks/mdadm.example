@@ -1,0 +1,23 @@
+# MDADM Example
+#
+# The following example shows how to create a RAID level 1 partition for /,
+# and a RAID level 5 for /home, assuming there are 3 SCSI disks on the system.
+# It also creates a swap partition on each drive.
+#
+# NOTE: Starting from EL7, MD devices no longer must follow mdX naming
+# convention.
+
+part raid.01 --size=6000 --ondisk=sda
+part raid.02 --size=6000 --ondisk=sdb
+part raid.03 --size=6000 --ondisk=sdc
+
+part swap --size=512 --ondisk=sda
+part swap --size=512 --ondisk=sdb
+part swap --size 512 --ondisk=sdc
+
+part raid.11 --size=1 --grow --ondisk=sda
+part raid.12 --size=1 --grow --ondisk=sdb
+part raid.13 --size=1 --grow --ondisk=sdc
+
+raid / --level=1 --device=centos7-root raid.01 raid.02 raid.03
+raid /home --level=5 --device=centos7-home raid.01 raid.02 raid.03

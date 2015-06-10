@@ -1,0 +1,14 @@
+# BTRFS Example
+# 
+# The following example shows how to create a BTRFS volume from member partitions
+# on three disks with subvolumes for / and /home. The main volume is not mounted
+# or used directly in this example. 
+
+part btrfs.01 --size=6000 --ondisk=sda
+part btrfs.02 --size=6000 --ondisk=sdb
+part btrfs.03 --size=6000 --ondisk=sdc
+
+btrfs none --data=0 --metadata=1 --label=centos7 btrfs.01 btrfs.02 btrfs.03
+btrfs / --subvol --name=root LABEL=centos7
+btrfs /home --subvol --namehome centos7
+

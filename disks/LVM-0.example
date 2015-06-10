@@ -1,0 +1,16 @@
+# LVM Example No. 0
+#
+# The following exmple shows the creation of a partition, logical volume group,
+# and the a logical volume. 
+ 
+part pv.01 --size=3000
+volgroup myvg pv.01
+logvol / --vgname=myvg --size=2000 --name=rootvol
+ 
+# Optionally, one can choose to have a logical volume occupy a percentage of
+# the remaining free space. 
+
+part pv.01 --size=1 --grow
+volgroup myvg pv.01
+logvol / --vgname=myvg --percent=90 --name=rootvol
+

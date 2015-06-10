@@ -1,0 +1,13 @@
+SYNTAX FOR FS CREATION
+======================
+
+BTRFS
+-----
+Volume creation:
+  btrfs <mntpoint> --data=<level> --metadata=<level> --label=<label> <partitions>
+Subvolume creation:
+  btrfs<mntpoint> --subvol --name=<path> <parent>
+Syntax:
+  --data= 	RAID level for DATA.
+  --metadata= 	RAID level for metadata.
+  --label= 	Sets a volume label for the BTRFS FS.

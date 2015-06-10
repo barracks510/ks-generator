@@ -1,0 +1,46 @@
+# LVM Example No.1
+# 
+# This example is an advanced partitioning example that implements LVM over
+# RAID, as well as the ability to resize various directories for future
+# growth. 
+# 
+# First, the partitions are cleared from hda and hdc to wipe them. All 
+# drives are reinitialized with empty partition tables. 
+# 
+# Then, the two drives are partitioned to prepare them for RAID configuration. 
+# 
+# Each drive is divided into five partitions, and each drive is partitioned 
+# into an identical layout. 
+# 
+# Pairs of physical partitions are used to create software RAID1. The first
+# four devices form /, /safe, swap, and /usr. The fifth partition is used
+# to create a physical volume for LVM.
+# 
+# Finally, a volume group is created on the physical volume and three logical
+# volumes are created and added to the volume group. 
+
+clearpart --drives=sda,sdc
+zerombr
+
+part raid.11 --size=1000 --asprimary --ondrive=sda
+part raid.12 --size=1000 --asprimary --ondrive=sda
+part raid.13 --size=2000 --asprimary --ondrive=sda
+part raid.14 --size=8000 --ondrive=sda
+part raid.15 --size=1000 --grow --ondrive=sda
+part raid.21 --size=1000 --asprimary --ondrive=sdc
+part raid.22 --size=1000 --asprimary --ondrive=sdc
+part raid.23 --size=2000 --asprimary --ondrive=sdc
+part raid.24 --size=8000 --ondrive=sdc
+part raid.25 --size=1000 --grow --ondrive=sdc
+
+raid / --fstype=xfs --device=root --level=RAID1 raid.11 raid.21
+raid /safe --fstype=xfs --device=safe --level=RAID1 raid.12 raid.22
+raid swap --fstype=swap --device=root --level=RAID1 raid.13 raid.23
+raid /usr --fstype=xfs --device=usr --level=RAID1 raid.14 raid.24
+raid pv.01 --fstype=xfs --device=pv.01 --level=RAID1 raid.15 raid.25
+
+volgroup sysvg pv.01
+logvol /var --vgname=sysvg --size=8000 --name=var
+logvol /var/freespace --vgname=sysvg --size=8000 --name=freespacetouse
+logvol /usr/local --vgname=sysvg --size=1 --grow --name-usrlocal
+
