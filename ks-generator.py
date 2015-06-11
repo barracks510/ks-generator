@@ -60,7 +60,7 @@ if raw_input("NET INSTALL? [Y/n]: ") == "n":
 	"# Use hard drive installation media\nharddrive --dir=None --partition=/dev/mapper/live-base\n")
 else:
 	ks.write(
-	"# Use CentOS 7 Mirrors\nurl --url=http://mirror.centos.org/centos/7/os/x86_64/\n")
+	"# Use CentOS 7 Mirrors\nurl --url=http://mirror.kernel.org/centos/7/os/x86_64/\n")
 
 ks.write("# Do NOT run the Setup Agent on first boot\nfirstboot --disable\n# Keyboard layouts\nkeyboard --vckeymap=us --xlayouts='us'\n# System language\nlang en_US.UTF-8\n")
 
