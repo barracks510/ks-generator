@@ -158,7 +158,6 @@ ks.write("@development\n")
 ks.write("@hardware-monitoring\n")
 ks.write("@perl-runtime\n")
 ks.write("java-1.8.0-openjdk-devel\n")
-ks.write("epel-release\n")
 ks.write("%end\n\n")
 
 # Write hosts to /etc/hosts
