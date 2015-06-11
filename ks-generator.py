@@ -109,7 +109,7 @@ user_fullname = raw_input("Full name for non-root user: ")
 user_password = raw_input("User Password: ")
 
 
-user_flags = "user --name=" + user + " --password" + crypt(user_password, "$6$"+str(random())) +" --iscrypted --gecos=\"" + user_fullname + "\""
+user_flags = "user --name=" + user + " --password=" + crypt(user_password, "$6$"+str(random())) +" --iscrypted --gecos=\"" + user_fullname + "\""
 
 if raw_input("Give Sudoer? [Y/n]") == "n":
 	ks.write(user_flags + "\n")
