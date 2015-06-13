@@ -21,6 +21,7 @@
 from crypt import crypt
 from random import random
 from subprocess import check_output
+import groups
 
 hosts = {
     "sorin1.cnsm.csulb.edu": "134.139.127.25",
@@ -176,27 +177,27 @@ else:
     print "Using AutoPartitioning."
     ks.write("autopart\n")
 
-# Install CORE, BASE and NTP Packages
-ks.write("%packages\n")
-ks.write("@core\n")
-ks.write("@base\n")
-ks.write("chrony\n")
-
-# GUI?
-if (raw_input("Install WORKSTATION? [Y/n]").lower() == "n"):
-    pass
-else:
-    ks.write("@gnome-desktop-environment\n")
-    ks.write("@gnome-apps\n")
-    ks.write("@internet-applications\n")
-    ks.write("@office-suite\n")
-    ks.write("@graphical-admin-tools\n")
-    ks.write("@technical-writing\n")
-ks.write("@development\n")
-ks.write("@hardware-monitoring\n")
-ks.write("@perl-runtime\n")
-ks.write("java-1.8.0-openjdk-devel\n")
-ks.write("%end\n\n")
+# # Install CORE, BASE and NTP Packages
+# ks.write("%packages\n")
+# ks.write("@core\n")
+# ks.write("@base\n")
+# ks.write("chrony\n")
+# 
+# # GUI?
+# if (raw_input("Install WORKSTATION? [Y/n]")=="n"):
+#         pass
+# else:
+#         ks.write("@gnome-desktop-environment\n")
+#         ks.write("@gnome-apps\n")
+#         ks.write("@internet-applications\n")
+#         ks.write("@office-suite\n")
+#         ks.write("@graphical-admin-tools\n")
+#         ks.write("@technical-writing\n")
+# ks.write("@development\n")
+# ks.write("@hardware-monitoring\n")
+# ks.write("@perl-runtime\n")
+# ks.write("java-1.8.0-openjdk-devel\n")
+# ks.write("%end\n\n")
 
 # Write hosts to /etc/hosts
 ks.write("%post\n")
@@ -216,3 +217,4 @@ ks.close()
 
 print "Setup complete."
 print "Please read the DEPLOYMENT file distributed with this program. "
+
