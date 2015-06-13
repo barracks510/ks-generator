@@ -58,7 +58,7 @@ directory in case you need to reinstall later.
 On a BIOS system with its boot loader using GPT (GUID partition table), you need to create the
 biosboot partition of 1 MB in size. 
 
-UEFI systems need to contain a small partition with a mount point of /bo o t/efi containing an
+UEFI systems need to contain a small partition with a mount point of /boot/efi containing an
 EFI System Partition file system. Its recommended size is 200 MB, which is also the default value
 for automatic partitioning.
 
