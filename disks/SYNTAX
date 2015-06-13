@@ -1,13 +1,56 @@
 SYNTAX FOR FS CREATION
 ======================
 
+AUTOMATIC PARTITIONING
+----------------------
+Automatically creates partionions: a root (/) partition, a swap partition, and
+the appropriate boot (/boot) partitions per architecture. On drives >50GiB,
+this also creates a home partition. 
+
+Automatic partitioning and FS creation:
+  autopart (--type=lvm --fstype=xfs)
+Syntax:
+  --type= 	Type of partitioning scheme (lvm, btrfs, plain, thinp)
+  --fstype= 	FS of the created partitions (ext2, ext3, ext4, xfs, vfat)
+  --nolvm 	Do NOT use default LVM or BTRFS partitioning.
+  --encrypted 	Encrypts all partitions
+  --passphrase=	Provides a system-wide passphrase for encrypted devices
+  --escrowcert=	Stores encryption keys of all encrypted drives as files in 
+  		/root, as encrypted by the X.509 certificate specified as
+  		it's argument. 
+  --cipher= 	Specifies cipher to use for encryption
+
 BTRFS
 -----
+Create a BTRFS volume or subvolume. 
+
 Volume creation:
   btrfs <mntpoint> --data=<level> --metadata=<level> --label=<label> <partitions>
 Subvolume creation:
-  btrfs<mntpoint> --subvol --name=<path> <parent>
+  btrfs <mntpoint> --subvol --name=<path> <parent>
 Syntax:
   --data= 	RAID level for DATA.
   --metadata= 	RAID level for metadata.
   --label= 	Sets a volume label for the BTRFS FS.
+  --noformat 	Uses an existing BTRFS volume
+
+LVM
+---
+Volume Group creation:
+  volgroup
+<TO BE ADDED TO>
+
+ADDITIONAL TOOLS
+----------------
+Some additional commands maybe helpful to installation process.
+
+Remove partitions from system, prior to creation of new partitions:
+  clearpart (--none)
+Syntax:
+  --all 	Removes all partitions from the system.
+  --drives= 	Specifies which drives to clear partitions from.
+  --list= 	Specifies which partitions to clear. This option overrides
+  		the --all and --linux options
+  --linux 	Erases all linux partitions
+  --none 	Do not remove any partitions.
+
