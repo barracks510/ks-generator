@@ -37,16 +37,6 @@ class metapackage (object):
 		self.desc = None
 		self.packages = {}
 
-def appendMeta(root_index):
-	x = metapackage()
-	x.name = root_index[1].text
-	x.abbrev = root_index[0].text
-	x.desc = root_index[2].text
-	for package in root_index[5]:
-		#print package.text
-		x.packages[package.text] = package.attrib["type"]
-	groups.append(x)
-
 for index in range(0, xml_grp_choices):
 	root_index = root[index]
 	collection_type = root_index.tag
@@ -56,28 +46,41 @@ for index in range(0, xml_grp_choices):
 		x.abbrev = root_index[0].text
 		x.desc = root_index[2].text
 		for package in root_index[5]:
-		#print package.text
 			x.packages[package.text] = package.attrib["type"]
-	# appendMeta(root[index])
+		groups.append(x)
 	if collection_type == "category":
-		#Warning appendMeta doesn't work on categories
-		appendMeta(root[index])
+		x = metapackage()
+		x.name = root_index[1].text
+		x.abbrev = root_index[0].text
+		x.desc = root_index[2].text
+		for package in root_index[3]:
+			x.packages[package.text] = "mandatory"
+		categories.append(x)
 	if collection_type == "environment":
-		#Warning appendMeta doesn't work on environments
-		appendMeta(root[index])
+		x = metapackage()
+		x.name = root_index[1].text
+		x.abbrev = root_index[0].text
+		x.desc = root_index[2].text
+		for package in root_index[4]:
+			x.packages[package.text] = "mandatory"
+		for package in root_index[5]:
+			x.packages[package.text] = "optional"
+		environments.append(x)
+	if collection_type == "langpacks":
+		pass
 
 for group in groups:
 	print group.name
 	print group.abbrev
 	print group.desc
-	print group.package.items()[0]
+	print group.packages.items()
 for group in categories:
 	print group.name
 	print group.abbrev
 	print group.desc
-	print group.package.items()[0]
+	print group.packages.items()[0]
 for group in environments:
 	print group.name
 	print group.abbrev
 	print group.desc
-	print group.package.items()[0]
+	print group.packages.items()[0]
