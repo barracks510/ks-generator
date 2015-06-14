@@ -5,7 +5,26 @@ SIMPLEST METHOD
 ---------------
 
 Make the compiled KS.CFG avaliable through the local IP range by serving
-it through a HTTP web server. 
+it through a HTTP web server. (e.g. nginx or apache). Even though all passwords
+are encrypted using the KS-GENERATOR, it may not be safe to release the CFGs
+to the world.
+
+```
+server {
+	listen 80;
+
+	...
+
+	location /ksconfig {
+		allow 192.168.1.1/24;
+		allow 127.0.0.1;
+		deny all;
+	}
+
+	...
+
+}
+```
 
 At boot, TAB-in to modify boot parameters and append the following lines 
 to setup kickstart:
