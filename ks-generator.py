@@ -118,7 +118,7 @@ else:
 	ks.write(user_flags + "\n")
 
 # Setup GRUB Bootloader
-grub_flags = "bootloader --location=mbr --boot-drive=sda --timeout=3"
+grub_flags = "bootloader --location=mbr --boot-drive=sda --timeout=1"
 
 print "RedHat recommends setting up a boot loader password on every system.\nAn unprotected boot loader can allow a potential attacker to modify the \nsystem's boot options and gain unauthorized root access to a system. "
 if raw_input("Set GRUB Password? [Y/n]: ") == "n":
@@ -133,10 +133,14 @@ else:
 		ks.write(grub_flags + "\n")
 
 # READ supplied DISK layout and WRITE changes
-disk = open(raw_input("DISK layout CONFIGURATION location: "))
-disk_layout = disk.read()
-disk.close()
-ks.write(disk_layout + "\n")
+disk_location = raw_input("DISK layout CONFIGURATION location: ")
+if disk_location: 
+	disk = open()
+	disk_layout = disk.read()
+	disk.close()
+	ks.write(disk_layout + "\n")
+else:
+	ks.write("autopart\n")
 
 # Install CORE, BASE and NTP Packages
 ks.write("%packages\n")
