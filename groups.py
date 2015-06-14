@@ -20,16 +20,6 @@
 
 import xml.etree.ElementTree as etree
 
-package_xml = etree.parse("packages/packages.en.xml")
-
-root = package_xml.getroot()
-
-xml_grp_choices = len(root)
-
-groups = []
-categories = []
-environments = []
-
 class metapackage (object):
 	def __init__(self):
 		self.name = None
@@ -37,50 +27,51 @@ class metapackage (object):
 		self.desc = None
 		self.packages = {}
 
-for index in range(0, xml_grp_choices):
-	root_index = root[index]
-	collection_type = root_index.tag
-	if collection_type == "group":
-		x = metapackage()
-		x.name = root_index[1].text
-		x.abbrev = root_index[0].text
-		x.desc = root_index[2].text
-		for package in root_index[5]:
-			x.packages[package.text] = package.attrib["type"]
-		groups.append(x)
-	if collection_type == "category":
-		x = metapackage()
-		x.name = root_index[1].text
-		x.abbrev = root_index[0].text
-		x.desc = root_index[2].text
-		for package in root_index[3]:
-			x.packages[package.text] = "mandatory"
-		categories.append(x)
-	if collection_type == "environment":
-		x = metapackage()
-		x.name = root_index[1].text
-		x.abbrev = root_index[0].text
-		x.desc = root_index[2].text
-		for package in root_index[4]:
-			x.packages[package.text] = "mandatory"
-		for package in root_index[5]:
-			x.packages[package.text] = "optional"
-		environments.append(x)
-	if collection_type == "langpacks":
-		pass
-
-for group in groups:
-	print group.name
-	print group.abbrev
-	print group.desc
-	print group.packages.items()
-for group in categories:
-	print group.name
-	print group.abbrev
-	print group.desc
-	print group.packages.items()[0]
-for group in environments:
-	print group.name
-	print group.abbrev
-	print group.desc
-	print group.packages.items()[0]
+def create_groups():
+	package_xml = etree.parse("packages/packages.en.xml")
+	
+	root = package_xml.getroot()
+	
+	xml_grp_choices = len(root)
+	
+	groups = []
+	categories = []
+	environments = []
+	
+	for index in range(0, xml_grp_choices):
+		root_index = root[index]
+		collection_type = root_index.tag
+		if collection_type == "group":
+			x = metapackage()
+			x.name = root_index[1].text
+			x.abbrev = root_index[0].text
+			x.desc = root_index[2].text
+			for package in root_index[5]:
+				x.packages[package.text] = package.attrib["type"]
+			groups.append(x)
+		if collection_type == "category":
+			x = metapackage()
+			x.name = root_index[1].text
+			x.abbrev = root_index[0].text
+			x.desc = root_index[2].text
+			for package in root_index[3]:
+				x.packages[package.text] = "mandatory"
+			categories.append(x)
+		if collection_type == "environment":
+			x = metapackage()
+			x.name = root_index[1].text
+			x.abbrev = root_index[0].text
+			x.desc = root_index[2].text
+			for package in root_index[4]:
+				x.packages[package.text] = "mandatory"
+			for package in root_index[5]:
+				x.packages[package.text] = "optional"
+			environments.append(x)
+		if collection_type == "langpacks":
+			pass
+	return {
+			"groups": groups, 
+			"categories": categories, 
+			"environments": environment
+	}
+	
