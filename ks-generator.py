@@ -135,11 +135,18 @@ else:
 # READ supplied DISK layout and WRITE changes
 disk_location = raw_input("DISK layout CONFIGURATION location: ")
 if disk_location: 
-	disk = open()
-	disk_layout = disk.read()
-	disk.close()
-	ks.write(disk_layout + "\n")
+	try:
+		disk = open()
+	except IOError:
+		print "Configuration doesn't exist at specified location."
+		print "Using AutoPartitioning."
+		ks.write("autopart\n")
+	else:
+		disk_layout = disk.read()
+		disk.close()
+		ks.write(disk_layout + "\n")
 else:
+	print "Using AutoPartitioning."
 	ks.write("autopart\n")
 
 # Install CORE, BASE and NTP Packages
