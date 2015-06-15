@@ -136,7 +136,7 @@ else:
 disk_location = raw_input("DISK layout CONFIGURATION location: ")
 if disk_location: 
 	try:
-		disk = open()
+		disk = open(disk_location, "r")
 	except IOError:
 		print "Configuration doesn't exist at specified location."
 		print "Using AutoPartitioning."
