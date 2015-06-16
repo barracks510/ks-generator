@@ -125,7 +125,10 @@ if raw_input("Set GRUB Password? [Y/n]: ") == "n":
 	ks.write(grub_flags + "\n")
 else: 
 	grub_password = raw_input("GRUB Password: ")
-	grub_crypt = check_output("echo -e \"" + grub_password + "\n" + grub_password + "\" | grub2-mkpasswd-pbkdf2", shell=True).replace("Enter password: \nReenter password: \nPBKDF2 hash of your password is ", "").replace("\n","")
+	grub_version = "grub2-mkpasswd-pbkdf2"
+	grub_crypt = check_output("echo -e \'" + grub_password + "\n" + grub_password + "\' | ", shell=True)
+	grub_crypt = grub_crypt.replace("Enter password: \nReenter password: \nPBKDF2 hash of your password is ", "")
+	grub_crypt = grub_crypt.replace("\n","")
 	if len(grub_crypt) != 282:
 		print "GRUB password could not be encrypted. Password will not be installed. "
 	else: 
