@@ -206,6 +206,15 @@ while not satisfied:
 
 ks.write("%packages\n")
 ks.write("@" + satisfied_list["environment"] + "\n")
+ks.write("policycoreutils\n")
+ks.write("policycoreutils-python\n")
+ks.write("selinux-policy\n")
+ks.write("selinux-policy-targeted\n")
+ks.write("libselinux-utils\n")
+ks.write("setroubleshoot-server\n")
+ks.write("setools\n")
+ks.write("setools-console\n")
+ks.write("mcstrans\n")
 ks.write("%end\n")
 
 # Write hosts to /etc/hosts
