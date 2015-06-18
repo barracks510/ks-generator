@@ -192,7 +192,7 @@ while not satisfied:
     environment_choice = environment_choice.replace("-", " ")
     bad_count = 0
     for environment in meta["environments"]:
-	if environment_choice[:4] in environment.abbrev:
+        if environment_choice[:4] in environment.abbrev:
             print "You selected", environment.name
             satisfied_list["environment"] = environment.abbrev
             satisfied = True
