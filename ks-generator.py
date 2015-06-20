@@ -58,7 +58,7 @@ ks.write("#version=RHEL\n#Created by Dennis Chen's ks-generator. \n")
 ks.write("# System authorization information\n")
 ks.write("auth --enableshadow --passalgo=sha512\n")
 
-if raw_input("NET INSTALL? [Y/n]: ") == "n":
+if raw_input("NET INSTALL? [Y/n]: ").lower() == "n":
     ks.write("# Use hard drive installation media\n")
     ks.write("harddrive --dir=None --partition=/dev/mapper/live-base\n")
 else:
@@ -136,21 +136,27 @@ print "RedHat recommends setting up a boot loader password on every system."
 print "An unprotected boot loader can allow a potential attacker to modify the"
 print "system's boot options and gain unauthorized root access to a system. "
 
+ks.write("# GRUB Bootloader Options\n")
+
 if raw_input("Set GRUB Password? [Y/n]: ") == "n":
     ks.write(grub_flags + "\n")
 else:
-    grub_password = raw_input("GRUB Password: ")
-    grub_version = "grub2-mkpasswd-pbkdf2"
-    grub_crypt = check_output(
-        "echo -e \'" + grub_password + "\n" + grub_password + "\' | ", shell=True)
-    grub_crypt = grub_crypt.replace(
-        "Enter password: \nReenter password: \nPBKDF2 hash of your password is ", "")
-    grub_crypt = grub_crypt.replace("\n", "")
-    if len(grub_crypt) != 282:
+    try:
+        from passlib.hash import grub_pbkdf2_sha512 as grub_sha
+        grub_password = raw_input("GRUB Password: ")
+
+        grub_crypt = grub_sha.encrypt(grub_password, rounds=10000)
+        if len(grub_crypt) != 282:
+            print "GRUB password could not be encrypted. "
+            print "Password will not be installed. "
+            ks.write(grub_flags + "\n")
+        else:
+            grub_flags += " --iscrypted --password=" + grub_crypt
+            ks.write(grub_flags + "\n")
+    except ImportError:
         print "GRUB password could not be encrypted. "
+        print "Do you have python-passlib installed?"
         print "Password will not be installed. "
-    else:
-        grub_flags += " --iscrypted --password=" + grub_crypt
         ks.write(grub_flags + "\n")
 
 # READ supplied DISK layout and WRITE changes
