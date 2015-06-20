@@ -72,7 +72,7 @@ ks.write("# System language\nlang en_US.UTF-8\n")
 
 # Networking setup
 print "Configuring Networking..."
-if raw_input("DHCP? [Y/n]: ") == "n":
+if raw_input("DHCP? [Y/n]: ").lower() == "n":
     print "Confirm the following are correct before using CFG."
     print "Hostname: %s\nIP: %s" % (hostname, hosts[hostname])
     print "NS: %s\nNetmask: %s" % (NS, NM)
@@ -91,13 +91,13 @@ if raw_input("DHCP? [Y/n]: ") == "n":
     ks.write(NM)
     ks.write(" --hostname=")
     ks.write(hostname)
-    if raw_input("IPv6 [Y/n]: ") == "n":
+    if raw_input("IPv6 [Y/n]: ").lower() == "n":
         ks.write(" --noipv6\n")
     else:
         ks.write("\n")
 else:
     ks.write("network --activate --bootproto=dhcp")
-    if raw_input("IPv6 [Y/n]: ") == "n":
+    if raw_input("IPv6 [Y/n]: ").lower() == "n":
         ks.write(" --noipv6\n")
     else:
         ks.write("\n")
@@ -138,7 +138,7 @@ print "system's boot options and gain unauthorized root access to a system. "
 
 ks.write("# GRUB Bootloader Options\n")
 
-if raw_input("Set GRUB Password? [Y/n]: ") == "n":
+if raw_input("Set GRUB Password? [Y/n]: ").lower() == "n":
     ks.write(grub_flags + "\n")
 else:
     try:
@@ -183,7 +183,7 @@ ks.write("@base\n")
 ks.write("chrony\n")
 
 # GUI?
-if (raw_input("Install WORKSTATION? [Y/n]") == "n"):
+if (raw_input("Install WORKSTATION? [Y/n]").lower() == "n"):
     pass
 else:
     ks.write("@gnome-desktop-environment\n")
