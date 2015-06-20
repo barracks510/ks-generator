@@ -72,6 +72,6 @@ def create_groups():
 	return {
 			"groups": groups, 
 			"categories": categories, 
-			"environments": environment
+			"environments": environments
 	}
 	

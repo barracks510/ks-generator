@@ -177,9 +177,36 @@ else:
     print "Using AutoPartitioning."
     ks.write("autopart\n")
 
-# # Install CORE, BASE and NTP Packages
+# Install CORE, BASE and NTP Packages
 meta = groups.create_groups()
-print meta["groups"]
+satisfied_list = {}
+
+satisfied = False
+
+print "The following are the Computing Environments avaliabled for EL7"
+for environment in meta["environments"]:
+    print " - ", environment.name
+while not satisfied:
+    environment_choice = raw_input("What environment would you like?").lower()
+    environment_choice = environment_choice.replace("_", " ")
+    environment_choice = environment_choice.replace("-", " ")
+    bad_count = 0
+    for environment in meta["environments"]:
+	if environment_choice[:4] in environment.abbrev:
+            print "You selected", environment.name
+            satisfied_list["environment"] = environment.abbrev
+            satisfied = True
+            break
+        elif bad_count == len(meta["environments"]):
+            print "Your environment choice was not found. "
+            print "Please enter it again. "
+            break
+        else:
+            bad_count += 1
+
+ks.write("%packages\n")
+ks.write("@" + satisfied_list["environment"] + "\n")
+ks.write("%end\n")
 
 # Write hosts to /etc/hosts
 ks.write("%post\n")
@@ -199,4 +226,3 @@ ks.close()
 
 print "Setup complete."
 print "Please read the DEPLOYMENT file distributed with this program. "
-
