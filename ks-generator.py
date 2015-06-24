@@ -217,12 +217,36 @@ ks.write("setools-console\n")
 ks.write("mcstrans\n")
 ks.write("%end\n")
 
-# Write hosts to /etc/hosts
-ks.write("%post\n")
-ks.write("#!/bin/bash\n")
-for host in hosts:
-    ks.write("echo -e \"" + hosts[host] + "\\t" + host + "\" >> /etc/hosts\n")
-ks.write("%end\n\n")
+from os import walk, path
+
+scripts_home = "./scripts"
+scripts = next(walk(scripts_home))[2]
+
+scripts_info = []
+for script in scripts:
+	file = open(path.join(scripts_home, script), "r")
+	script_info = {}
+	shebang = file.readline()
+	if shebang[:3] == "#!/":
+		script_info["exec"] = shebang[2:]
+		content = file.read()
+		# content.encode("unicode_escape")
+		content = content.replace("\\","\\\\")
+		content = content.replace("\"","\\\"")
+		content = content.replace("\'","\\'")
+		content = content.replace("\n","\\n")
+		script_info["content"] = content
+		file.close()
+		scripts_info.append(script_info)
+	else:
+		print("The file", script, "is missing a shebang!")
+		print("It will not be included in the post-install. ")
+		file.close()
+print("#!/bin/bash")
+for index in range(len(scripts_info)):
+	print("echo -e \"{}\" > temp{}".format(scripts_info[index]["content"], index))
+for index in range(len(scripts_info)):
+	print("{} temp{}".format(scripts_info[index]["exec"][:-1], index))
 
 # Disable RedHat KDump
 ks.write("%addon com_redhat_kdump --disable --reserve-mb=auto\n")
@@ -235,3 +259,4 @@ ks.close()
 
 print("Setup complete.")
 print("Please read the DEPLOYMENT file distributed with this program. ")
+
