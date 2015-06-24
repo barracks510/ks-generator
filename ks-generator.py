@@ -229,13 +229,7 @@ for script in scripts:
 	shebang = file.readline()
 	if shebang[:3] == "#!/":
 		script_info["exec"] = shebang[2:]
-		content = file.read()
-		# content.encode("unicode_escape")
-		content = content.replace("\\","\\\\")
-		content = content.replace("\"","\\\"")
-		content = content.replace("\'","\\'")
-		content = content.replace("\n","\\n")
-		script_info["content"] = content
+		script_info["content"] = file.read()
 		file.close()
 		scripts_info.append(script_info)
 	else:
@@ -244,7 +238,9 @@ for script in scripts:
 		file.close()
 print("#!/bin/bash")
 for index in range(len(scripts_info)):
-	print("echo -e \"{}\" > temp{}".format(scripts_info[index]["content"], index))
+	print("cat <<'EOF' >temp{}".format(index))
+	print(scripts_info[index]["content"])
+	print("EOF")
 for index in range(len(scripts_info)):
 	print("{} temp{}".format(scripts_info[index]["exec"][:-1], index))
 
