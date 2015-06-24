@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # This program creates a ks.cfg file based of the configuration options given.
 #
@@ -46,12 +46,12 @@ NM = "255.255.255.128"
 GW = "134.139.127.1"
 DEV = "enp5s1"
 
-print "KS-GENERATOR Copyright (C) 2015 Dennis Chen <barracks510@gmail.com>"
-print "This program comes with ABSOLUTELY NO WARRANTY. This is free software, "
-print "and you are welcome to redistribute it under certain conditions. \n\n"
+print("KS-GENERATOR Copyright (C) 2015 Dennis Chen <barracks510@gmail.com>")
+print("This program comes with ABSOLUTELY NO WARRANTY. This is free software,")
+print("and you are welcome to redistribute it under certain conditions. \n\n")
 
 # Open a File HOSTNAME.CFG in WRITE mode
-hostname = str(raw_input("Machine Host Name: "))
+hostname = str(input("Machine Host Name: "))
 ks = open(hostname.replace(".", "-") + ".cfg", "w")
 ks.write("#version=RHEL\n#Created by Dennis Chen's ks-generator. \n")
 
@@ -59,7 +59,7 @@ ks.write("#version=RHEL\n#Created by Dennis Chen's ks-generator. \n")
 ks.write("# System authorization information\n")
 ks.write("auth --enableshadow --passalgo=sha512\n")
 
-if raw_input("NET INSTALL? [Y/n]: ").lower() == "n":
+if input("NET INSTALL? [Y/n]: ").lower() == "n":
     ks.write("# Use hard drive installation media\n")
     ks.write("harddrive --dir=None --partition=/dev/mapper/live-base\n")
 else:
@@ -72,13 +72,13 @@ ks.write("# Keyboard layouts\nkeyboard --vckeymap=us --xlayouts='us'\n")
 ks.write("# System language\nlang en_US.UTF-8\n")
 
 # Networking setup
-print "Configuring Networking..."
-if raw_input("DHCP? [Y/n]: ").lower() == "n":
-    print "Confirm the following are correct before using CFG."
-    print "Hostname: %s\nIP: %s" % (hostname, hosts[hostname])
-    print "NS: %s\nNetmask: %s" % (NS, NM)
-    print "Gateway: %s" % (GW)
-    print "Device: %s" % (DEV)
+print("Configuring Networking...")
+if input("DHCP? [Y/n]: ").lower() == "n":
+    print("Confirm the following are correct before using CFG.")
+    print("Hostname: %s\nIP: %s" % (hostname, hosts[hostname]))
+    print("NS: %s\nNetmask: %s" % (NS, NM))
+    print("Gateway: %s" % (GW))
+    print("Device: %s" % (DEV))
 
     ks.write("network --activate --bootproto=static --device=")
     ks.write(DEV)
@@ -92,13 +92,13 @@ if raw_input("DHCP? [Y/n]: ").lower() == "n":
     ks.write(NM)
     ks.write(" --hostname=")
     ks.write(hostname)
-    if raw_input("IPv6 [Y/n]: ").lower() == "n":
+    if input("IPv6 [Y/n]: ").lower() == "n":
         ks.write(" --noipv6\n")
     else:
         ks.write("\n")
 else:
     ks.write("network --activate --bootproto=dhcp")
-    if raw_input("IPv6 [Y/n]: ").lower() == "n":
+    if input("IPv6 [Y/n]: ").lower() == "n":
         ks.write(" --noipv6\n")
     else:
         ks.write("\n")
@@ -110,21 +110,21 @@ ks.write("timezone America/Los_Angeles --isUtc --ntpservers=0.us.pool.ntp.org")
 ks.write(",1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org\n")
 
 # User Accounts
-root_pass = raw_input("Root password: ")
+root_pass = input("Root password: ")
 ks.write("#User Accounts\n")
 ks.write("rootpw --iscrypted " +
          crypt(root_pass, "$6$" + str(random())) + "\n")
 
-user = raw_input("Username for non-root user: ")
-user_fullname = raw_input("Full name for non-root user: ")
-user_password = raw_input("User Password: ")
+user = input("Username for non-root user: ")
+user_fullname = input("Full name for non-root user: ")
+user_password = input("User Password: ")
 
 
 user_flags = "user --name=" + user + " --password=" + \
     crypt(user_password, "$6$" + str(random())) + \
     " --iscrypted --gecos=\"" + user_fullname + "\""
 
-if raw_input("Give Sudoer? [Y/n]") == "n":
+if input("Give Sudoer? [Y/n]") == "n":
     ks.write(user_flags + "\n")
 else:
     user_flags += " --groups=wheel\n"
@@ -133,48 +133,48 @@ else:
 # Setup GRUB Bootloader
 grub_flags = "bootloader --location=mbr --boot-drive=sda --timeout=1"
 
-print "RedHat recommends setting up a boot loader password on every system."
-print "An unprotected boot loader can allow a potential attacker to modify the"
-print "system's boot options and gain unauthorized root access to a system. "
+print("RedHat recommends setting up a boot loader password on every system.")
+print("An unprotected boot loader can allow a potential attacker to modify a")
+print("system's boot options and gain unauthorized root access to a system. ")
 
 ks.write("# GRUB Bootloader Options\n")
 
-if raw_input("Set GRUB Password? [Y/n]: ").lower() == "n":
+if input("Set GRUB Password? [Y/n]: ").lower() == "n":
     ks.write(grub_flags + "\n")
 else:
     try:
         from passlib.hash import grub_pbkdf2_sha512 as grub_sha
-        grub_password = raw_input("GRUB Password: ")
+        grub_password = input("GRUB Password: ")
 
         grub_crypt = grub_sha.encrypt(grub_password, rounds=10000)
         if len(grub_crypt) != 282:
-            print "GRUB password could not be encrypted. "
-            print "Password will not be installed. "
+            print("GRUB password could not be encrypted. ")
+            print("Password will not be installed. ")
             ks.write(grub_flags + "\n")
         else:
             grub_flags += " --iscrypted --password=" + grub_crypt
             ks.write(grub_flags + "\n")
     except ImportError:
-        print "GRUB password could not be encrypted. "
-        print "Do you have python-passlib installed?"
-        print "Password will not be installed. "
+        print("GRUB password could not be encrypted. ")
+        print("Do you have python-passlib installed?")
+        print("Password will not be installed. ")
         ks.write(grub_flags + "\n")
 
 # READ supplied DISK layout and WRITE changes
-disk_location = raw_input("DISK layout CONFIGURATION location: ")
+disk_location = input("DISK layout CONFIGURATION location: ")
 if disk_location:
     try:
         disk = open(disk_location, "r")
     except IOError:
-        print "Configuration doesn't exist at specified location."
-        print "Using AutoPartitioning."
+        print("Configuration doesn't exist at specified location.")
+        print("Using AutoPartitioning.")
         ks.write("autopart\n")
     else:
         disk_layout = disk.read()
         disk.close()
         ks.write(disk_layout + "\n")
 else:
-    print "Using AutoPartitioning."
+    print("Using AutoPartitioning.")
     ks.write("autopart\n")
 
 # Install CORE, BASE and NTP Packages
@@ -183,23 +183,23 @@ satisfied_list = {}
 
 satisfied = False
 
-print "The following are the Computing Environments avaliabled for EL7"
+print("The following are the Computing Environments avaliabled for EL7")
 for environment in meta["environments"]:
-    print " - ", environment.name
+    print(" - ", environment.name)
 while not satisfied:
-    environment_choice = raw_input("What environment would you like?").lower()
+    environment_choice = input("What environment would you like?").lower()
     environment_choice = environment_choice.replace("_", " ")
     environment_choice = environment_choice.replace("-", " ")
     bad_count = 0
     for environment in meta["environments"]:
         if environment_choice[:4] in environment.abbrev:
-            print "You selected", environment.name
+            print("You selected", environment.name)
             satisfied_list["environment"] = environment.abbrev
             satisfied = True
             break
         elif bad_count == len(meta["environments"]):
-            print "Your environment choice was not found. "
-            print "Please enter it again. "
+            print("Your environment choice was not found. ")
+            print("Please enter it again. ")
             break
         else:
             bad_count += 1
@@ -233,5 +233,5 @@ ks.write("shutdown\n")
 
 ks.close()
 
-print "Setup complete."
-print "Please read the DEPLOYMENT file distributed with this program. "
+print("Setup complete.")
+print("Please read the DEPLOYMENT file distributed with this program. ")
