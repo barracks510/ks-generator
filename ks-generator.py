@@ -236,13 +236,15 @@ for script in scripts:
 		print("The file", script, "is missing a shebang!")
 		print("It will not be included in the post-install. ")
 		file.close()
+ks.write("%post --interpreter=/bin/bash\n")
 print("#!/bin/bash")
 for index in range(len(scripts_info)):
-	print("cat <<'EOF' >temp{}".format(index))
-	print(scripts_info[index]["content"])
-	print("EOF")
+	ks.write("cat <<'EOF' >temp{}\n".format(index))
+	ks.write(scripts_info[index]["content"] + "\n")
+	ks.write("EOF\n")
 for index in range(len(scripts_info)):
-	print("{} temp{}".format(scripts_info[index]["exec"][:-1], index))
+	ks.write("{} temp{}\n".format(scripts_info[index]["exec"][:-1], index))
+ks.write("%end\n\n")
 
 # Disable RedHat KDump
 ks.write("%addon com_redhat_kdump --disable --reserve-mb=auto\n")
