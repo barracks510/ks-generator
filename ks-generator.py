@@ -218,10 +218,16 @@ ks.write("mcstrans\n")
 ks.write("%end\n")
 
 # Write hosts to /etc/hosts
-ks.write("%post\n")
+ks.write("%post --interpreter=/usr/bin/bash \n")
 ks.write("#!/bin/bash\n")
 for host in hosts:
     ks.write("echo -e \"" + hosts[host] + "\\t" + host + "\" >> /etc/hosts\n")
+try:
+    script = open("./scripts/script.sh", "r")
+    ks.write(script.read())
+    script.close()
+except IOError:
+    print("No script in the scripts directory!")
 ks.write("%end\n\n")
 
 # Disable RedHat KDump
