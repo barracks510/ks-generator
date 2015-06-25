@@ -111,7 +111,7 @@ ks.write(",1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org\n")
 
 # User Accounts
 root_pass = input("Root password: ")
-ks.write("#User Accounts\n")
+ks.write("# User Accounts\n")
 ks.write("rootpw --iscrypted " +
          crypt(root_pass, "$6$" + str(random())) + "\n")
 
@@ -162,6 +162,7 @@ else:
 
 # READ supplied DISK layout and WRITE changes
 disk_location = input("DISK layout CONFIGURATION location: ")
+ks.write("# Disk formatting/partitioning scheme\n")
 if disk_location:
     try:
         disk = open(disk_location, "r")
@@ -204,6 +205,7 @@ while not satisfied:
         else:
             bad_count += 1
 
+ks.write("# Package installation list\n")
 ks.write("%packages\n")
 ks.write("@" + satisfied_list["environment"] + "\n")
 ks.write("policycoreutils\n")
@@ -217,17 +219,34 @@ ks.write("setools-console\n")
 ks.write("mcstrans\n")
 ks.write("%end\n")
 
-# Write hosts to /etc/hosts
-ks.write("%post --interpreter=/usr/bin/bash \n")
-ks.write("#!/bin/bash\n")
-for host in hosts:
-    ks.write("echo -e \"" + hosts[host] + "\\t" + host + "\" >> /etc/hosts\n")
-try:
-    script = open("./scripts/script.sh", "r")
-    ks.write(script.read())
-    script.close()
-except IOError:
-    print("No script in the scripts directory!")
+from os import walk, path
+
+scripts_home = "./scripts"
+scripts = next(walk(scripts_home))[2]
+
+scripts_info = []
+for script in scripts:
+    file = open(path.join(scripts_home, script), "r")
+    script_info = {}
+    shebang = file.readline()
+    if shebang[:3] == "#!/":
+        script_info["exec"] = shebang[2:]
+        script_info["content"] = file.read()
+        file.close()
+        scripts_info.append(script_info)
+    else:
+        print("The file", script, "is missing a shebang!")
+        print("It will not be included in the post-install. ")
+        file.close()
+ks.write("# POST-INSTALL Script")
+ks.write("%post --interpreter=/bin/bash\n")
+print("#!/bin/bash")
+for index in range(len(scripts_info)):
+    ks.write("cat <<'EOF' >temp{}\n".format(index))
+    ks.write(scripts_info[index]["content"] + "\n")
+    ks.write("EOF\n")
+for index in range(len(scripts_info)):
+    ks.write("{} temp{}\n".format(scripts_info[index]["exec"][:-1], index))
 ks.write("%end\n\n")
 
 # Disable RedHat KDump
