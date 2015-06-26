@@ -1,0 +1,21 @@
+POST-INSTALLATION SCRIPTS
+=========================
+
+Any scripts located in this directory will be executed after the installation
+process on the target machine. The scripts will be executed in random order, 
+so there should be no script that depends on a prior to be executed before
+itself. In a later version of this KS-GENERATOR, there may be a way to setup
+dependencies between scripts. 
+
+A script will NOT be included unless it has a proper header shebang. The most
+common headers for scripts can be found here. 
+
+| Language  |      Shebang Style       |
+|-----------|--------------------------|
+| Bash      | `#!/usr/bin/bash`        |
+| Shell     | `#!/usr/bin/sh`          |
+| C-shell   | `#!/usr/bin/csh`         |
+| Python 2  | `#!/usr/bin/env python2` |
+| Python 3  | `#!/usr/bin/env python3` |
+| Perl      | `#!/usr/bin/env perl`    |
+
